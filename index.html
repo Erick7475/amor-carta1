@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Animation</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Agbalumo&family=Jost:wght@800;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi+Fun:wght@400..700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jacquard+24&display=swap">
+    <style>
+        /* Estilos generales del cuerpo */
+        body {
+            height: 100vh; /* Altura del cuerpo al 100% del viewport */
+            display: flex; /* Utiliza flexbox para el diseño */
+            align-items: center; /* Centra verticalmente */
+            justify-content: center; /* Centra horizontalmente */
+            font-family: 'Jost', sans-serif; /* Fuente principal */
+            background-color: #f2acac; /* Color de fondo */
+            margin: 0; /* Elimina márgenes predeterminados */
+            padding: 0; /* Elimina relleno predeterminado */
+        }
+
+        /* Ocultar el input checkbox */
+        input#open {
+            display: none;
+        }
+
+        /* Estilos para el contenedor principal de la tarjeta */
+        .eid-day-card {
+            position: relative; /* Posición relativa */
+            width: 300px; /* Ancho */
+            height: 300px; /* Altura */
+            transform-style: preserve-3d; /* Preservar transformación en 3D para hijos */
+            transform: perspective(2500px); /* Perspectiva para efecto 3D */
+            transition: .3s; /* Transición suave */
+        }
+
+        /* Estilos para la parte frontal de la tarjeta */
+        .card-front {
+            position: relative; /* Posición relativa */
+            background-color: #fff0f3; /* Color de fondo */
+            width: 300px; /* Ancho */
+            height: 300px; /* Altura */
+            transform-origin: left; /* Origen de la transformación */
+            box-shadow: inset 100px 20px 100px rgba(0,0,0,.15), 30px 0 50px rgba(0,0,0,.3); /* Sombra */
+            transition: .3s; /* Transición suave */
+        }
+
+        /* Efecto antes de la parte frontal */
+        .card-front:before {
+            content: ""; /* Contenido generado */
+            position: absolute; /* Posición absoluta */
+            width: 280px; /* Ancho */
+            height: 280px; /* Altura */
+            background-color: #d04e4e; /* Color de fondo */
+            top: 10px; /* Posición desde arriba */
+            left: 10px; /* Posición desde la izquierda */
+        }
+
+        /* Estilos para el interior de la tarjeta */
+        .card-inside {
+            position: absolute; /* Posición absoluta */
+            background-color: #fff0f3; /* Color de fondo */
+            width: 300px; /* Ancho */
+            height: 300px; /* Altura */
+            z-index: -1; /* Z-index para que esté detrás */
+            left: 0; /* Posición desde la izquierda */
+            top: 0; /* Posición desde arriba */
+            box-shadow: inset 100px 20px 100px rgba(0,0,0,.22), 100px 20px 100px rgba(0,0,0,0.1); /* Sombra */
+        }
+
+        /* Estilos para el botón de abrir la tarjeta */
+        .open {
+            position: absolute; /* Posición absoluta */
+            width: 300px; /* Ancho */
+            height: 300px; /* Altura */
+            left: 0; /* Posición desde la izquierda */
+            top: 0; /* Posición desde arriba */
+            background-color: transparent; /* Fondo transparente */
+            z-index: 7; /* Z-index para que esté encima */
+            cursor: pointer; /* Cursor de puntero */
+        }
+
+        /* Efecto de abrir la tarjeta cuando el checkbox está marcado */
+        #open:checked ~ .card-front {
+            transform: rotateY(-155deg); /* Rotación en el eje Y */
+            box-shadow: inset 100px 20px 100px rgba(0,0,0,.13), 30px 0px 50px rgba(0,0,0,0.1); /* Sombra */
+        }
+
+        #open:checked ~ .card-front:before {
+            z-index: 5; /* Z-index */
+            background-color: #fff0f3; /* Color de fondo */
+            width: 300px; /* Ancho */
+            height: 300px; /* Altura */
+            top: 0; /* Posición desde arriba */
+            left: 0; /* Posición desde la izquierda */
+            box-shadow: inset 100px 20px 100px rgba(0,0,0,0.1) 30px 0px 50px rgba(0,0,0,0.1); /* Sombra */
+        }
+
+        /* Estilos para la nota en la tarjeta */
+        .note {
+            position: relative; /* Posición relativa */
+            width: 200px; /* Ancho */
+            height: 150px; /* Altura */
+            top: 75px; /* Posición desde arriba */
+            left: 50px; /* Posición desde la izquierda */
+            color: #333; /* Color del texto */
+            background-color: #fff0f3; /* Color de fondo */
+            font-size: 40px; /* Tamaño de fuente */
+            display: flex; /* Utiliza flexbox */
+            align-items: center; /* Centra verticalmente */
+            text-align: center; /* Alinea al centro */
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.3)); /* Sombra */
+        }
+
+        .note::before, .note::after {
+            content: ""; /* Contenido generado */
+            position: absolute; /* Posición absoluta */
+            background-color: #ba1c1c; /* Color de fondo */
+            width: 40px; /* Ancho */
+            height: 40px; /* Altura */
+        }
+
+        .note::before {
+            transform: rotate(-45deg); /* Rotación */
+            top: -20px; /* Posición desde arriba */
+            left: 80px; /* Posición desde la izquierda */
+        }
+
+        .note::after {
+            border-radius: 50%; /* Borde redondeado */
+            top: -35px; /* Posición desde arriba */
+            left: 65px; /* Posición desde la izquierda */
+            box-shadow: 30px 0 #ba1c1c; /* Sombra */
+        }
+
+        /* Estilos para el texto principal */
+        .text-one {
+            position: absolute; /* Posición absoluta */
+            font-family: "Jacquard 24", system-ui; /* Fuente */
+            color: #333; /* Color del texto */
+            font-size: 70px; /* Tamaño de fuente */
+            top: 30px; /* Posición desde arriba */
+            width: 300px; /* Ancho */
+            text-align: center; /* Alineación al centro */
+        }
+
+        .text-one:before, .text-one::after {
+            position: absolute; /* Posición absoluta */
+            left: 5px; /* Posición desde la izquierda */
+            text-align: center; /* Alineación al centro */
+            width: 300px; /* Ancho */
+        }
+
+        .text-one::before {
+            content: " linda"; /* Contenido generado */
+            top: 45px; /* Posición desde arriba */
+            color: #d04e4e; /* Color del texto */
+            font-family: "Jacquard 24", system-ui; /* Fuente */
+            font-size: 90px; /* Tamaño de fuente */
+        }
+
+        /* Estilos para el corazón animado */
+        .heart {
+            position: relative; /* Posición relativa */
+            background-color: #d04e4e; /* Color de fondo */
+            width: 60px; /* Ancho */
+            height: 60px; /* Altura */
+            top: 180px; /* Posición desde arriba */
+            left: 120px; /* Posición desde la izquierda */
+            transform: rotate(-45deg); /* Rotación */
+            animation: beat .8s infinite; /* Animación */
+        }
+
+        .heart::before, .heart::after {
+            content: ""; /* Contenido generado */
+            position: absolute; /* Posición absoluta */
+            border-radius: 50%; /* Borde redondeado */
+            width: 60px; /* Ancho */
+            height: 60px; /* Altura */
+            background-color: #d04e4e; /* Color de
+            fondo */
+          }
+
+          .heart::before {
+              top: -30px; /* Posición desde arriba */
+              left: 0; /* Posición desde la izquierda */
+          }
+  
+          .heart::after {
+              left: 30px; /* Posición desde la izquierda */
+              top: 0; /* Posición desde arriba */
+          }
+  
+          /* Estilos para la sonrisa */
+          .smile {
+              position: absolute; /* Posición absoluta */
+              height: 15px; /* Altura */
+              width: 30px; /* Ancho */
+              background-color: #333; /* Color de fondo */
+              z-index: 1; /* Z-index */
+              border-radius: 0 0 100px 100px; /* Borde redondeado */
+              top: 200px; /* Posición desde arriba */
+              left: 135px; /* Posición desde la izquierda */
+              overflow: hidden; /* Oculta el desbordamiento */
+          }
+  
+          .smile::before {
+              content: ""; /* Contenido generado */
+              position: absolute; /* Posición absoluta */
+              border-radius: 50%; /* Borde redondeado */
+              width: 20px; /* Ancho */
+              height: 20px; /* Altura */
+              background-color: #030202; /* Color de fondo */
+              top: 5px; /* Posición desde arriba */
+              left: 5px; /* Posición desde la izquierda */
+          }
+  
+          /* Estilos para los ojos */
+          .eyes {
+              position: absolute; /* Posición absoluta */
+              background-color: #333; /* Color de fondo */
+              border-radius: 50%; /* Borde redondeado */
+              width: 10px; /* Ancho */
+              height: 10px; /* Altura */
+              z-index: 1; /* Z-index */
+              top: 190px; /* Posición desde arriba */
+              left: 165px; /* Posición desde la izquierda */
+              box-shadow: -40px 0 #333; /* Sombra */
+              transform-origin: 50%; /* Origen de la transformación */
+              animation: close 2s infinite; /* Animación */
+          }
+  
+          @keyframes close {
+              0%, 100% {
+                  transform: scale(1, 0.5); /* Escala */
+              }
+              5%, 95% {
+                  transform: scale(1, 1); /* Escala */
+              }
+          }
+  
+          /* Animación del corazón */
+          @keyframes beat {
+              0%, 40%, 100% {
+                  transform: scale(1) rotate(-45deg); /* Escala y rotación */
+              }
+              25%, 60% {
+                  transform: scale(1.1) rotate(-45deg); /* Escala y rotación */
+              }
+          }
+      </style>
+  </head>
+  <body>
+      <div class="eid-day-card">
+          <input type="checkbox" id="open" />
+          <label for="open" class="open"></label>
+          <div class="card-front">
+              <div class="note"></div>
+          </div>
+          <div class="card-inside">
+              <div class="text-one">te amito<3</div>
+              <div class="heart"></div>
+              <div class="smile"></div>
+              <div class="eyes"></div>
+          </div>
+      </div>
+  </body>
+  </html>
+  
